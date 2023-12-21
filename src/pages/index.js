@@ -1,1 +1,1 @@
-export {default as ProjectsPage} from '.';
+export {default as ProjectsPage} from './ProjectsPage/ProjectsPage';
