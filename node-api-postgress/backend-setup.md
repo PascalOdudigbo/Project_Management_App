@@ -11,7 +11,7 @@
 
 3. Create a src sub directory and within it create the server.js file. Paste the following code within the file
 
-`
+```
 const express = require('express')sudi
 const app = express();
 const port = 3000;
@@ -21,7 +21,8 @@ app.get('/', (req, res) => {
 });
 
 app.listen(port, () => console.log('app listening on port 3000'));
-`
+
+```
 
 4. Run the server from within the src directory using the following command 
 
