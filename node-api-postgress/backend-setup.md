@@ -89,3 +89,53 @@ FOR EACH ROW
 EXECUTE FUNCTION update_updated_at();
 
 ```
+
+10. Creating the database connection
+
+```
+const Pool = require(pg).Pool;
+
+const pool = new Pool({
+    user: "postgres",
+    host: "localhost",
+    database: "database_name",
+    password: 'postgres_password',
+    port: 3000
+});
+
+module.exports = pool
+
+```
+
+11. create a routes folder and create route '.js' files for all your database models. set up the route files like this
+
+```
+const {Router} = require('express');
+
+const router = Router();
+
+router.get('/', (req, res) => {
+    res.send("using api route");
+});
+
+module.exports = router;
+
+```
+
+12. Setup the server file to use these routes by importing the route files and creating paths that link to them 
+
+```
+const routeName = require('./path/to/route/file');
+
+app.use('path', routeName);
+
+```
+
+***Example***
+
+```
+const contractRoutes = require('./routes/contract_routes');
+
+app.use('/api/v1/contracts', contractRoutes);
+
+```
