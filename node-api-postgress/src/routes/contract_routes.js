@@ -1,9 +1,10 @@
 const {Router} = require('express');
-
 const router = Router();
 
-router.get('/', (req, res) => {
-    res.send("using api route");
-});
+// importing the controller
+const {getAllContracts} = require('../controllers/contracts_controller');
+
+// defining the route to list all contracts
+router.get('/', getAllContracts);
 
 module.exports = router; 

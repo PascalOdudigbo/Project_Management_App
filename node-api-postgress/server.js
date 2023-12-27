@@ -1,12 +1,17 @@
 // importing express and specifying port
 const express = require('express');
 
+require('dotenv').config();
+
+
 // importing the created routes
-const contractRoutes = require('./routes/contract_routes');
-const projectRoutes = require('./routes/project_routes');
+const contractRoutes = require('./src/routes/contract_routes');
+const projectRoutes = require('./src/routes/project_routes');
 
 const app = express();
 const port = 3000;
+
+app.use(express.json());
 
 // Defining the root route and displaying a message
 app.get('/', (req, res) => {

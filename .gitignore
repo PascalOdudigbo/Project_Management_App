@@ -21,4 +21,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-/project-management-app/node-api-postgress/node_modules*
+
+/node-api-postgress/node_modules
+.env
