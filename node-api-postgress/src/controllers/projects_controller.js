@@ -1,8 +1,8 @@
-// import the contract resources
-const {listAll} = require('../resources/contract_resources');
+// import the project resources
+const {listAll} = require('../resources/project_resources');
 
-// A conroller function to get all contracts
-const getAllContracts = (req, res) => {
+// A controller function to get all projects
+const getAllProjects = (req, res) => {
     try{
         // call the listAll function from the resource file
         listAll(req, res);
@@ -14,5 +14,5 @@ const getAllContracts = (req, res) => {
 };
 
 module.exports = {
-    getAllContracts,
+    getAllProjects,
 }

@@ -138,4 +138,110 @@ const contractRoutes = require('./routes/contract_routes');
 
 app.use('/api/v1/contracts', contractRoutes);
 
+<!-- or -->
+
+app.use('/contracts', contractRoutes);
+
+```
+
+13. Import the database connector in the resource file and implement the required function
+
+```
+// import the database connection
+const pool = require('../../db');
+
+// A function to get all the contracts
+const listAll = (req, res) => {
+    // using the database connection to querry the database
+    pool.query("SELECT * FROM database_table", (error, results) =>{
+        // return an error if need
+        if (error) {
+            console.error("Error fetching entity:", error);
+            res.status(500).json({ error: "Internal Server Error" });
+            return;
+        }
+        // return the database response as JSON if request is successful
+        res.status(200).json(results.rows);
+    })
+}
+
+module.exports = {
+    listAll,
+}
+
+```
+
+14. Use the resource function in the appropriate controller
+
+```
+// import the contract resources
+const {listAll} = require('../resources/contract_resources');
+
+// A conroller function to get all contracts
+const getAllContracts = (req, res) =>{
+    try{
+        // call the listAll function from the resource file
+        listAll(req, res);
+    } catch (error){
+        // in the eventuality of an error occuring
+        console.error(error);
+        res.status(500).json({error: 'Internal Server Error'});
+    }
+};
+
+module.exports = {
+    getAllContracts,
+}
+
+```
+
+15. Use the controller in the appropriate route file as the callback function of the appropriate route
+
+```
+const {Router} = require('express');
+const router = Router();
+
+// importing the controller functions
+const {getAllContracts} = require('../controllers/contracts_controller');
+
+// defining the route to list all contracts
+router.get('/', getAllContracts);
+
+module.exports = router; 
+
+```
+
+16. Setup the server file to make use of the routes 
+
+```
+// importing express and specifying port
+const express = require('express');
+
+// Enabling the use of environment variables
+require('dotenv').config();
+
+
+// importing the created routes
+const contractRoutes = require('./src/routes/contract_routes');
+const projectRoutes = require('./src/routes/project_routes');
+
+const app = express();
+const port = 3000;
+
+app.use(express.json());
+
+// Defining the root route and displaying a message
+app.get('/', (req, res) => {
+    res.send("Hello World!")
+});
+
+// Creating a path for contracts that links to the contract routes
+app.use('/contracts', contractRoutes);
+
+// Creating a path for projects that links to the project routes
+app.use('/projects', projectRoutes);
+
+// returning an output to inform us of server running
+app.listen(port, () => console.log('app listening on port 3000'))
+
 ```
