@@ -245,3 +245,4 @@ app.use('/projects', projectRoutes);
 app.listen(port, () => console.log('app listening on port 3000'))
 
 ```
+17. Move all your querries to a seperate folder and export then from their respective filed for use in appropriate resource files.
