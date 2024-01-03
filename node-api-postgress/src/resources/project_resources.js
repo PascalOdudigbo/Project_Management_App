@@ -2,7 +2,7 @@
 const pool = require('../../db');
 
 // impoeting the project querries
-const { getAllProjects, getProjectById, addProject, checkProjectExists } = require('../queries/project_queries');
+const { getAllProjects, getProjectById, addProject, checkProjectExists, deleteProject } = require('../queries/project_queries');
 
 // importing resource util functions
 const { capitalize } = require('../utils/resource_utils');
@@ -35,7 +35,7 @@ const getById = (req, res) => {
             return;
         }
         // return the database response as JSON if request is successful
-        res.status(200).json(results.rows);
+        res.status(200).json(results.rows[0]);
     })
 
 }
@@ -54,25 +54,57 @@ const save = (req, res) => {
 
         if (results.rowCount > 0) {
             // Project already exists
-            return res.status(409).json({ error: "Contract type already exists." });
+            return res.status(409).json({ error: "Project type already exists." });
         }
 
-        // Add the contract to the database if it doesn't exist
+        // Add the project to the database if it doesn't exist
         pool.query(addProject, [capitalize(name), description, image_url, contract_type_id, contract_signed_on, budget, is_active], (error, results) => {
             if (error) {
                 console.error("Error saving project:", error);
                 return res.status(500).json({ error: "Internal Server Error" });
             }
-            console.log("Result of the insert:", results.rows[0]);
-            // Return the created contract
+            
+            // Return the created project
             res.status(201).json(results.rows[0]);
         });
     });
 
 }
 
+// A function to delete a project if it exists
+const destroy = (req, res) => {
+    // getting the id from the request parameters and converting it to integer
+    const id = parseInt(req.params.id);
+
+    // checking if the project exists
+    pool.query(getProjectById, [id], (error, results) => {
+        if (error) {
+            console.error("Error checking project:", error);
+            return res.status(500).json({ error: "Internal Server Error" });
+        }
+
+        if (results.rowCount === 0) {
+            // Project doesn't exist
+            return res.status(404).json({ error: "Project doesn't exist." });
+        }
+
+        // delete project if it exists
+        pool.query(deleteProject, [id], (error, results) => {
+            if (error) {
+                console.error("Error deleting project:", error);
+                return res.status(500).json({ error: "Internal Server Error" });
+            }
+            
+            // Return the project delete success message
+            res.status(200).json("Project deleted successfully");
+        })
+    });
+}
+
+
 module.exports = {
     listAll,
     getById,
     save,
+    destroy,
 }

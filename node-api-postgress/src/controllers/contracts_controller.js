@@ -1,5 +1,5 @@
 // import the contract resources
-const { listAll, getById, save } = require('../resources/contract_resources');
+const { listAll, getById, save, destroy } = require('../resources/contract_resources');
 
 // A conroller function to get all contracts
 const getAllContracts = (req, res) => {
@@ -36,8 +36,20 @@ const addContract = (req, res) => {
     }
 }
 
+// A controller function to delete a contract from the database
+const deleteContract = (req, res) => {
+    try {
+        // call the destroy function from the resource file
+        destroy(req, res);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
 module.exports = {
     getAllContracts,
     getContractById,
     addContract,
+    deleteContract,
 }

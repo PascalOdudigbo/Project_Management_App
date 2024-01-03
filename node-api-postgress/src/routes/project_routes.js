@@ -2,7 +2,7 @@ const { Router } = require('express');
 const router = Router();
 
 // Importing the controller functions
-const { getAllProjects, getProjectById, addProject } = require('../controllers/projects_controller');
+const { getAllProjects, getProjectById, addProject, deleteProject } = require('../controllers/projects_controller');
 
 // defining the route to list all projects
 router.get('/', getAllProjects);
@@ -10,5 +10,7 @@ router.get('/', getAllProjects);
 router.get('/:id', getProjectById);
 // defining a route to add a project to the database
 router.post('/', addProject);
+// defining a route to delete a project from the database
+router.delete('/:id', deleteProject)
 
 module.exports = router;
