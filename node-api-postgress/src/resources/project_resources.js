@@ -2,7 +2,7 @@
 const pool = require('../../db');
 
 // impoeting the project querries
-const { getAllProjects, getProjectById, addProject, checkProjectExists, deleteProject } = require('../queries/project_queries');
+const { getAllProjects, getProjectById, addProject, checkProjectExists, deleteProject, updateProject } = require('../queries/project_queries');
 
 // importing resource util functions
 const { capitalize } = require('../utils/resource_utils');
@@ -71,6 +71,39 @@ const save = (req, res) => {
 
 }
 
+// A function to update a project if it exists
+const update = (req, res) => {
+    // getting the id and parsing it to integer
+    const id = parseInt(req.params.id);
+    // destricturing the request parameters
+    const { name, description, image_url, contract_type_id, contract_signed_on, budget, is_active } = req.body;
+
+    // checking if project already exists
+    pool.query(getProjectById, [id], (error, results) => {
+        if (error) {
+            console.error("Error checking project:", error);
+            return res.status(500).json({ error: "Internal Server Error" });
+        }
+
+        if (results.rowCount === 0) {
+            // Project doesn't exists
+            return res.status(404).json({ error: "Project doesn't exist." });
+        }
+
+        // Add the project to the database if it doesn't exist
+        pool.query(updateProject, [id, capitalize(name), description, image_url, contract_type_id, contract_signed_on, budget, is_active], (error, results) => {
+            if (error) {
+                console.error("Error updating project:", error);
+                return res.status(500).json({ error: "Internal Server Error" });
+            }
+            
+            // Return the created project
+            res.status(200).json(results.rows[0]);
+        });
+    });
+
+}
+
 // A function to delete a project if it exists
 const destroy = (req, res) => {
     // getting the id from the request parameters and converting it to integer
@@ -106,5 +139,6 @@ module.exports = {
     listAll,
     getById,
     save,
+    update,
     destroy,
 }

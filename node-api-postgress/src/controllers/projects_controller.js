@@ -1,5 +1,5 @@
 // import the project resources
-const {listAll, getById, save, destroy} = require('../resources/project_resources');
+const {listAll, getById, save, update, destroy} = require('../resources/project_resources');
 
 // A controller function to get all projects
 const getAllProjects = (req, res) => {
@@ -36,6 +36,17 @@ const addProject = (req, res) => {
     }
 }
 
+// A controller function to update a project to the database
+const updateProject = (req, res) => {
+    try {
+        // call the update function imported from the resource file
+        update(req, res);
+    } catch (error){
+        console.error(error);
+        res.status(500).json({error: 'Internal Server Error'});
+    }
+}
+
 // A controller function to delete a project from the database
 const deleteProject = (req, res) => {
     try {
@@ -52,5 +63,6 @@ module.exports = {
     getAllProjects,
     getProjectById,
     addProject,
+    updateProject,
     deleteProject,
 }
